@@ -67,8 +67,6 @@ The notebook `FLPysyftcodeLogisticRegression.ipynb` provides an educational walk
 python -m venv venv
 # On Windows:
 venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
 ```
 
 ### Launch Datasites
@@ -97,15 +95,12 @@ Expected output:
 
 ## Running the Federated Learning Experiment
 
-### Option A: Jupyter Notebook (Educational)
-
 ```bash
-jupyter notebook FLPysyftcodeLogisticRegression.ipynb
+jupyter notebook 
 ```
 
 ## How It Works
 
-### 1. **Local Model Training** (`ml_experiment`)
 Each datasite receives:
 - Its private MNIST shard (X, y)
 - Optionally, the current global model parameters
@@ -116,13 +111,12 @@ The function:
 3. Returns metrics (train/test accuracy, confusion matrix)
 4. Returns updated model parameters (coef, intercept)
 
-### 2. **FedAvg Aggregation** (`avg_params`)
+
 The central server:
 1. Collects model parameters from all datasites
 2. Averages them element-wise: `global_params = mean([local_params_1, local_params_2, ...])`
 3. Updates the global model with the aggregated parameters
 
-### 3. **Federated Learning Loop** (`fl_experiment_logreg_true`)
 For each FL epoch:
 1. Distribute current global parameters to each datasite
 2. Each datasite trains locally with its data + global parameters
@@ -130,17 +124,6 @@ For each FL epoch:
 4. Aggregate using FedAvg
 5. Log metrics (accuracy per site per epoch)
 6. Repeat
-
-
-
-### Datasite Details
-Configure datasites in `datasites.py`:
-- `DATASITE_PORTS` — ports for each datasite
-- `INSTITUTE_FULLNAMES` — human-readable names
-
-### MNIST Data
-- Auto-downloaded to `./tmp/mnist_data/` on first run
-- Stored as raw bytes in `data/MNIST/raw/`
 
 
 
