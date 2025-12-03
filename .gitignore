@@ -1,0 +1,72 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+.env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Data and large files
+/data/
+/tmp/
+tmp/
+*/tmp/
+**/raw/
+data/**/raw/
+*.h5
+*.pt
+*.pth
+*.ckpt
+*.tar.gz
+*.tar
+*.zip
+*.tar.bz2
+*.gz
+*.sqlite3
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# OneDrive / Backup
+~$*
+
+# Logs
+logs/
+*.log
+
+# macOS
+.AppleDouble
+.LSOverride
+
+# coverage
+.coverage
+htmlcov/
+
+# Test and build
+dist/
+build/
+.eggs/
+*.egg-info/
+
+# Ignore notebook outputs (if you want to keep notebooks, but avoid heavy outputs)
+output/*
+
+# Ignore large temporary mnist raw files (already in data/tmp)
+data/MNIST/raw/
+
+# Allow tracking small useful files
+!data/.gitkeep
+
+# If you want more precise ignoring, use the helper script `scripts/gitignore_large_files.py`
