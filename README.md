@@ -6,12 +6,29 @@ A complete implementation of **Federated Learning (FL)** using the **FedAvg** al
 
 This project implements federated learning on the **MNIST** dataset, split arbitrarily between two datasites. Each datasite trains a local **Logistic Regression** model on its private MNIST shard, and a central process aggregates the local model parameters using **FedAvg** over several federated rounds.
 
+## Architecture
+
+```
+┌──────────────────────────────────────────────┐
+│          Central Server (Client)             │
+│  - Aggregates model parameters (FedAvg)      │
+│  - Orchestrates FL rounds                    │
+└──────────────────────────────────────────────┘
+          ↓                          ↓
+┌──────────────────────┐   ┌──────────────────────┐
+│   Datasite 1 (FL)    │   │   Datasite 2 (FL)    │
+│  - MNIST shard 1     │   │  - MNIST shard 2     │
+│  - Local ML training │   │  - Local ML training │
+│  - Privacy preserved │   │  - Privacy preserved │
+└──────────────────────┘   └──────────────────────┘
+```
+
 **Key features:**
-- ✅ No raw data ever leaves the datasites — only model parameters are shared
-- ✅ Multiple datasites train independently and locally
-- ✅ Central server aggregates parameters using FedAvg
-- ✅ Metrics (accuracy, confusion matrices) tracked per round
-- ✅ Visualization of convergence across FL epochs
+-  No raw data ever leaves the datasites — only model parameters are shared
+-  Multiple datasites train independently and locally
+-  Central server aggregates parameters using FedAvg
+-  Metrics (accuracy, confusion matrices) tracked per round
+-  Visualization of convergence across FL epochs
 
 ## Project Structure
 
@@ -44,20 +61,17 @@ The notebook `FLPysyftcodeLogisticRegression.ipynb` provides an educational walk
 
 ## Installation & Setup
 
-### 1. Clone and Install Dependencies
+
 
 ```bash
-git clone <repository-url>
-cd pysyftios
 python -m venv venv
 # On Windows:
 venv\Scripts\activate
 # On macOS/Linux:
 source venv/bin/activate
-pip install -r requirements.txt
 ```
 
-### 2. Launch Datasites
+### Launch Datasites
 
 Before running the federated learning experiment, start the datasites:
 
@@ -89,19 +103,6 @@ Expected output:
 jupyter notebook FLPysyftcodeLogisticRegression.ipynb
 ```
 
-This provides an interactive walkthrough with:
-- Step-by-step explanations
-- Visualizations (accuracy curves, confusion matrices)
-- Debugging and exploration cells
-
-### Option B: Python Script (Production)
-
-```bash
-python FLPysyftcodeLogisticRegression.py
-```
-
-This runs the complete FL pipeline end-to-end.
-
 ## How It Works
 
 ### 1. **Local Model Training** (`ml_experiment`)
@@ -130,93 +131,7 @@ For each FL epoch:
 5. Log metrics (accuracy per site per epoch)
 6. Repeat
 
-## Key Functions
 
-### `ml_experiment(data, global_params=None, seed=12345)`
-**Purpose:** Train a logistic regression model on local private data.
-
-**Input:**
-- `data` : tuple of (X, y) tensors
-- `global_params` : dict with "coef" and "intercept" (optional)
-- `seed` : random seed for reproducibility
-
-**Output:**
-- `metrics` : tuple of (train_metrics, test_metrics) with accuracy and confusion matrix
-- `params` : dict with "coef" and "intercept"
-
-### `avg_params(all_params)`
-**Purpose:** Average model parameters across all datasites (FedAvg algorithm).
-
-**Input:**
-- `all_params` : list of dicts, each with "coef" and "intercept"
-
-**Output:**
-- Averaged dict with "coef" and "intercept"
-
-### `fl_experiment_logreg_true(datasites, fl_epochs=5, seed=12345)`
-**Purpose:** Main federated learning loop.
-
-**Input:**
-- `datasites` : dict of connected datasite clients
-- `fl_epochs` : number of FL rounds
-- `seed` : random seed
-
-**Output:**
-- `fl_metrics` : dict mapping epoch → list of (metrics, params) per site
-- `fl_model_params` : final aggregated model parameters
-
-## Visualization
-
-The notebook includes three visualization functions:
-
-### 1. **Accuracy Over Time**
-```python
-plot_fl_metrics(datasites, fl_metrics, title="FL Experiment on MNIST")
-```
-Shows mean test accuracy across all datasites per FL epoch.
-
-### 2. **Confusion Matrices**
-```python
-plot_all_confusion_matrices(confusion_matrices, title="Confusion Matrices")
-```
-Displays per-site confusion matrices at the final epoch.
-
-### 3. **Per-Site Accuracy Curves**
-```python
-plot_site_accuracies(datasites, fl_metrics, title="Per-site test accuracy")
-```
-Tracks accuracy trajectory for each datasite independently.
-
-## Architecture
-
-```
-┌──────────────────────────────────────────────┐
-│          Central Server (Client)             │
-│  - Aggregates model parameters (FedAvg)      │
-│  - Orchestrates FL rounds                    │
-└──────────────────────────────────────────────┘
-          ↓                          ↓
-┌──────────────────────┐   ┌──────────────────────┐
-│   Datasite 1 (FL)    │   │   Datasite 2 (FL)    │
-│  - MNIST shard 1     │   │  - MNIST shard 2     │
-│  - Local ML training │   │  - Local ML training │
-│  - Privacy preserved │   │  - Privacy preserved │
-└──────────────────────┘   └──────────────────────┘
-```
-
-**No raw data leaves the datasites** — only model parameters are transmitted.
-
-## Configuration
-
-### Number of FL Epochs
-Modify in `FLPysyftcodeLogisticRegression.py`:
-```python
-fl_metrics, fl_model_params = fl_experiment_logreg_true(
-    datasites, 
-    fl_epochs=5,  # Change this
-    seed=12345
-)
-```
 
 ### Datasite Details
 Configure datasites in `datasites.py`:
@@ -227,52 +142,7 @@ Configure datasites in `datasites.py`:
 - Auto-downloaded to `./tmp/mnist_data/` on first run
 - Stored as raw bytes in `data/MNIST/raw/`
 
-## Troubleshooting
 
-### Datasites fail to start
-```bash
-# Check if ports 54879, 54880 are available
-netstat -an | grep 54879
-
-# Or kill existing processes
-# Windows: taskkill /F /IM python.exe
-# macOS/Linux: pkill -f "python launch_datasites"
-```
-
-### Permission denied when running code
-- The automatic approval thread may not be running
-- Manually approve requests from the admin UI or run:
-```python
-admin = sy.login(url="http://localhost:54879", email="info@openmined.org", password="changethis")
-for r in admin.requests:
-    r.approve(approve_nested=True)
-```
-
-### MNIST data not downloading
-- Ensure internet connection
-- Check `torchvision` is installed: `pip install torchvision`
-
-## Managing Large Files
-
-To find and automatically ignore large files in git:
-
-```bash
-# Dry run (see what would be added):
-python scripts/gitignore_large_files.py --threshold 50MB --dry-run
-
-# Actually add to .gitignore:
-python scripts/gitignore_large_files.py --threshold 50MB
-```
-
-## Dependencies
-
-See `requirements.txt`:
-- `syft` — federated learning framework
-- `torch` — deep learning
-- `torchvision` — MNIST dataset
-- `scikit-learn` — logistic regression & metrics
-- `numpy` — numerical computing
-- `matplotlib`, `seaborn` — visualization
 
 ## Results Example
 
@@ -307,12 +177,4 @@ Additional references:
 - [MNIST Dataset](http://yann.lecun.com/exdb/mnist/)
 - [OpenMined Organization](https://openmined.org/)
 
-## License
 
-See LICENSE file for details.
-
-## Authors
-
-- Federated Learning implementation using PySyft
-- MNIST data split across multiple datasites
-- Logistic Regression local training + FedAvg aggregation
