@@ -2,7 +2,6 @@
 
 A complete implementation of **Federated Learning (FL)** using the **FedAvg** algorithm while preserving data privacy with **PySyft**. This project demonstrates how multiple datasites can collaboratively train machine learning models without sharing raw data.
 
-## Overview
 
 This project implements federated learning on the **MNIST** dataset, split arbitrarily between two datasites. Each datasite trains a local **Logistic Regression** model on its private MNIST shard, and a central process aggregates the local model parameters using **FedAvg** over several federated rounds.
 
@@ -29,25 +28,6 @@ This project implements federated learning on the **MNIST** dataset, split arbit
 -  Central server aggregates parameters using FedAvg
 -  Metrics (accuracy, confusion matrices) tracked per round
 -  Visualization of convergence across FL epochs
-
-## Project Structure
-
-```
-.
-├── README.md                                    # This file
-├── FLPysyftcodeLogisticRegression.ipynb        # Notebook demonstrating the full pipeline (educational)
-├── FLPysyftcodeLogisticRegression.py           # Main source code (production-ready implementation)
-├── datasites.py                                 # Datasite setup and server management
-├── datasets.py                                  # MNIST data loading and splitting
-├── launch_datasites.py                         # Script to launch multiple datasites
-├── requirements.txt                            # Python dependencies
-├── .gitignore                                   # Git ignore rules
-├── scripts/
-│   └── gitignore_large_files.py               # Helper to manage large files in git
-└── data/
-    └── MNIST/                                   # MNIST dataset (auto-downloaded)
-        └── raw/
-```
 
 ## Main Code
 
