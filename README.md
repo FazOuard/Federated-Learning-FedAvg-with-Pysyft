@@ -135,7 +135,7 @@ This project is inspired by:
 - [OpenMined Blog: A Python Package and an Email is All You Need](https://openmined.org/blog/a-python-package-and-an-email-is-all-you-need/)
 
 Additional references:
-- [PySyft Documentation](https://pysyft.readthedocs.io/)
+- [PySyft Documentation](https://docs.openmined.org/en/latest/)
 - [FedAvg Algorithm](https://arxiv.org/abs/1602.05629) (McMahan et al., 2016)
 - [MNIST Dataset](http://yann.lecun.com/exdb/mnist/)
 - [OpenMined Organization](https://openmined.org/)
