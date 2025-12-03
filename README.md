@@ -32,7 +32,7 @@ This project implements federated learning on the **MNIST** dataset, split arbit
 ## Main Code
 
 The **main implementation** is located in:
-- **`FLPysyftcodeLogisticRegression.py`** — Production-ready code containing:
+- **`FLPysyftcodeLogisticRegression.ipynb`** — Production-ready code containing:
   - `ml_experiment(data, global_params=None, seed)` — Local training function run on each datasite
   - `avg_params(all_params)` — FedAvg parameter aggregation
   - `fl_experiment_logreg_true(datasites, fl_epochs, seed)` — Main federated learning loop
