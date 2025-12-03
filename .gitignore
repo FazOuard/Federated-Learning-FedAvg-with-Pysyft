@@ -11,7 +11,8 @@ env/
 
 # Jupyter
 .ipynb_checkpoints/
-*.ipynb
+# Keep Jupyter notebooks tracked. If you want to ignore outputs or checkpoints,
+# `.ipynb_checkpoints/` is already ignored above.
 
 # Data and large files
 /data/
